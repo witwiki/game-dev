@@ -24,7 +24,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 		Frame frame = (Frame) this.getParent().getParent();
 		frame.setTitle("Q-Bot Alpha");
-		
+
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	public void destroy() {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void run() {
 		while (true) {
@@ -58,27 +58,28 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		/*	Use a switch to carry out the appropriate action depending
-		 * 	on which button is pressed		
-		*/
-		switch(e.getKeyCode()){
-		
+		/*
+		 * Use a switch to carry out the appropriate action depending on which
+		 * button is pressed
+		 */
+		switch (e.getKeyCode()) {
+
 		case KeyEvent.VK_UP:
 			System.out.println("Move up");
 			break;
-			
+
 		case KeyEvent.VK_DOWN:
 			System.out.println("Move down");
 			break;
-			
+
 		case KeyEvent.VK_LEFT:
 			System.out.println("Move left");
 			break;
-			
+
 		case KeyEvent.VK_RIGHT:
 			System.out.println("Move right");
 			break;
-			
+
 		case KeyEvent.VK_SPACE:
 			System.out.println("Jump");
 			break;
@@ -87,27 +88,28 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		/*	Use a switch to carry out the appropriate action depending
-		 * 	on which button is released		
-		*/
-		switch(e.getKeyCode()){
-		
+		/*
+		 * Use a switch to carry out the appropriate action depending on which
+		 * button is released
+		 */
+		switch (e.getKeyCode()) {
+
 		case KeyEvent.VK_UP:
 			System.out.println("Stop moving up");
 			break;
-			
+
 		case KeyEvent.VK_DOWN:
 			System.out.println("Stop moving down");
 			break;
-			
+
 		case KeyEvent.VK_LEFT:
 			System.out.println("Stop moving left");
 			break;
-			
+
 		case KeyEvent.VK_RIGHT:
 			System.out.println("Stop moving right");
 			break;
-			
+
 		case KeyEvent.VK_SPACE:
 			System.out.println("Stop jumping");
 			break;
@@ -117,7 +119,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
