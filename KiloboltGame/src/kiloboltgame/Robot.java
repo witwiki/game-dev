@@ -2,13 +2,43 @@ package kiloboltgame;
 
 import java.awt.Graphics;
 
+/*
+ * AS A GENERAL RULE:
+ * ==================
+ * Whenever we add a new object to our game, we have to do 
+ * the following:
+ * 1. Create a class for it so that we have a blueprint 
+ * for it. (We did this for our background).
+ * 2. Within the StartingClass, we must create objects 
+ * using this class (first by declaring them as variables 
+ * below the class declaration and second by 
+ * assigning them values in the start() method).
+ * 3. Within the run() method, we must call the object's 
+ * update() method.
+ * 4. We must paint the new object in the paint() method.
+ */
+
 public class Robot {
-	// In Java, Class Variables should be private so that only its methods can
-	// change them.
+
+	// Constants
+	final int JUMPSPEED = -15;
+	final int MOVESPEED = 5;
+	final int GROUND = 382;
+
+	/*
+	 * In Java, Class Variables should be private so that only its methods can
+	 * change them.
+	 */
 	private int centerX = 100; // x, y coordinates of robot character's center
-	private int centerY = 382;
+	private int centerY = GROUND;
 	private boolean jumped = false; // true if character is in the air and false
 									// is on the ground
+	private boolean movingLeft = false;
+	private boolean movingRight = false;
+	private boolean ducked = false;
+
+	private static Background bg1 = StartingClass.getBg1();
+	private static Background bg2 = StartingClass.getBg2();
 
 	private int speedX = 0; // the rate at which these x and y positions change
 	private int speedY = 1;
@@ -30,15 +60,18 @@ public class Robot {
 		 */
 		if (speedX < 0) {
 			centerX += speedX;
-		} else if (speedX == 0) {
-			System.out.println("Do not scroll the background.");
+		}
+		if (speedX == 0 || speedX < 0) {
+			bg1.setSpeedX(0);
+			bg2.setSpeedX(0);
 
-		} else {
-			if (centerX <= 150) { // if robot's centerX is in the left 150 px
-				centerX += speedX; // change centerX by adding speedX
-			} else {
-				System.out.println("Scroll Background Here");
-			}
+		}
+		if (centerX <= 200 && speedX > 0) {
+			centerX += speedX;
+		}
+		if (speedX > 0 && centerX > 200) {
+			bg1.setSpeedX(-MOVESPEED);
+			bg2.setSpeedX(-MOVESPEED);
 		}
 
 		// Updates Y Position
@@ -47,14 +80,12 @@ public class Robot {
 		 * pushed to the ground. We assume that the ground is located at about
 		 * 440 pixels down from the top, and if the character's Y position plus
 		 * his Y speed will bring him below the ground, we use the statement:
-		 * centerY = 382; to manually set the character at a height that will
+		 * centerY = 382/GROUND; to manually set the character at a height that will
 		 * stop him from moving.
 		 */
-		if (centerY + speedY >= 382) { // 382 is when robot is standing on
-										// ground
-			centerY = 382;
-		} else {
-			centerY += speedY; // add speedY to determine its new position
+		centerY += speedY;
+		if (centerY + speedY >= GROUND) {
+			centerY = GROUND;
 		}
 
 		// Handles Jumping
@@ -65,8 +96,8 @@ public class Robot {
 		if (jumped == true) {
 			speedY += 1; // while robot is in air, add 1 to its speedY
 							// NOTE: this brings robot downwards
-			if (centerY + speedY >= 382) {
-				centerY = 382;
+			if (centerY + speedY >= GROUND) {
+				centerY = GROUND;
 				speedY = 0;
 				jumped = false;
 			}
@@ -86,20 +117,45 @@ public class Robot {
 	}
 
 	public void moveRight() {
-		speedX = 6;
+		if (ducked == false) {
+			speedX = MOVESPEED;
+		}
 	}
 
 	public void moveLeft() {
-		speedX = -6;
+		if (ducked == false) {
+			speedX = -MOVESPEED;
+		}
 	}
 
-	public void stop() {
-		speedX = 0;
+	public void stopRight() {
+		setMovingRight(false);
+		stop();
 	}
+
+	public void stopLeft() {
+		setMovingLeft(false);
+		stop();
+	}
+	
+    private void stop() {
+        if (isMovingRight() == false && isMovingLeft() == false) {
+            speedX = 0;
+        }
+
+        if (isMovingRight() == false && isMovingLeft() == true) {
+            moveLeft();
+        }
+
+        if (isMovingRight() == true && isMovingLeft() == false) {
+            moveRight();
+        }
+
+    }
 
 	public void jump() {
 		if (jumped == false) {
-			speedY = -15;
+			speedY = JUMPSPEED;
 			jumped = true;
 		}
 
@@ -144,4 +200,28 @@ public class Robot {
 	public void setSpeedY(int speedY) {
 		this.speedY = speedY;
 	}
+	
+	public boolean isDucked() {
+        return ducked;
+    }
+
+    public void setDucked(boolean ducked) {
+        this.ducked = ducked;
+    }
+
+    public boolean isMovingRight() {
+        return movingRight;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+    public boolean isMovingLeft() {
+        return movingLeft;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
 }
