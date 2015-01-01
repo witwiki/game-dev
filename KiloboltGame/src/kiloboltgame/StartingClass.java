@@ -12,8 +12,9 @@ import java.net.URL;
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	private Robot robot;
+	private Heliboy hb, hb2;
 	private Image image, currentSprite, character, characterDown,
-			characterJumped, background;
+			characterJumped, background, heliboy;
 	private URL base;
 	private Graphics second;
 	private static Background bg1, bg2;
@@ -46,6 +47,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		characterJumped = getImage(base, "data/jumped.png");
 		currentSprite = character;
 		background = getImage(base, "data/background.png");
+		heliboy = getImage(base, "data/heliboy.png");
 
 	}
 
@@ -57,6 +59,10 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		// Initialise background objects
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
+		
+		//	create Heliboy variables
+		hb = new Heliboy(340,360);
+		hb2 = new Heliboy(700,360);
 
 		// Initialise new robot
 		robot = new Robot();
@@ -81,7 +87,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			} else if (robot.isJumped() == false && robot.isDucked() == false) {
 				currentSprite = character;
 			}
-
+			hb.update();
+			hb2.update();
 			bg1.update();
 			bg2.update();
 			repaint(); // this calls paint
@@ -119,7 +126,17 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		//	draw the current state of the character's image
 		g.drawImage(currentSprite, robot.getCenterX() - 61,
 				robot.getCenterY() - 63, this);
-
+		//	draw the heliboy objects
+		/*	If we paint 48 pixels lower in both X and Y 
+		 * 	(by subtracting 48), then whatever numbers 
+		 * 	that we input in the constructor (e.g. 
+		 * 	hb = new Heliboy(340, 360);) will represent 
+		 * 	the centerX and centerY coordinates of the 
+		 * 	newly drawn images.
+		 */
+		g.drawImage(heliboy, hb.getCenterX() - 48, hb.getCenterY() - 48, this);
+		g.drawImage(heliboy, hb2.getCenterX() - 48, hb2.getCenterY() - 48, this);
+		
 	}
 
 	@Override
