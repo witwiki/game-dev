@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
@@ -49,13 +50,6 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		background = getImage(base, "data/background.png");
 		heliboy = getImage(base, "data/heliboy.png");
 
-	}
-
-	@Override
-	public void start() {
-		Thread thread = new Thread(this);
-		thread.start();
-
 		// Initialise background objects
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
@@ -66,6 +60,12 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 		// Initialise new robot
 		robot = new Robot();
+	}
+
+	@Override
+	public void start() {
+		Thread thread = new Thread(this);
+		thread.start();
 	}
 
 	@Override
@@ -87,6 +87,17 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			} else if (robot.isJumped() == false && robot.isDucked() == false) {
 				currentSprite = character;
 			}
+			
+			ArrayList projectiles = robot.getProjectiles();
+			for(int i = 0; i < projectiles.size(); i++){
+				Projectile p = (Projectile) projectiles.get(i);
+				if (p.isVisible() == true){
+					p.update();
+				} else {
+					projectiles.remove(i);
+				}
+			}
+			
 			hb.update();
 			hb2.update();
 			bg1.update();
@@ -120,6 +131,14 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		// draw the background image
 		g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
 		g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
+		
+		ArrayList projectiles = robot.getProjectiles();
+		for(int i = 0; i < projectiles.size(); i++){
+			Projectile p = (Projectile) projectiles.get(i);
+			g.setColor(Color.YELLOW);
+			g.fillRect(p.getX(), p.getY(), 10, 5);
+		}
+		
 		// draw the character image
 		g.drawImage(character, robot.getCenterX() - 61,
 				robot.getCenterY() - 63, this);
@@ -172,7 +191,15 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		case KeyEvent.VK_SPACE:
 			robot.jump();
 			break;
+			
+		case KeyEvent.VK_CONTROL:
+			if(robot.isDucked() == false && robot.isJumped() == false){
+				robot.shoot();
+			}
+			break;
+
 		}
+		
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package kiloboltgame;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 /*
  * AS A GENERAL RULE:
@@ -42,6 +43,9 @@ public class Robot {
 
 	private int speedX = 0; // the rate at which these x and y positions change
 	private int speedY = 1;
+	
+	private ArrayList<Projectile>projectiles = new ArrayList<Projectile>();
+	
 
 	public void update() {
 
@@ -160,6 +164,11 @@ public class Robot {
 		}
 
 	}
+	
+	public void shoot(){
+		Projectile p = new Projectile(centerX + 50, centerY - 25);	//	50 and 25 are x,y coordinates of p
+		projectiles.add(p);
+	}
 
 	public int getCenterX() {
 		return centerX;
@@ -224,4 +233,8 @@ public class Robot {
     public void setMovingLeft(boolean movingLeft) {
         this.movingLeft = movingLeft;
     }
+
+	public ArrayList getProjectiles() {
+		return projectiles;
+	}
 }
