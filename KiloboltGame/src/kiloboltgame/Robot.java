@@ -74,8 +74,9 @@ public class Robot {
 			centerX += speedX;
 		}
 		if (speedX > 0 && centerX > 200) {
-			bg1.setSpeedX(-MOVESPEED);
-			bg2.setSpeedX(-MOVESPEED);
+			//	background will move at 1/5th character's speed
+			bg1.setSpeedX(-MOVESPEED/5);
+			bg2.setSpeedX(-MOVESPEED/5);
 		}
 
 		// Updates Y Position
