@@ -19,7 +19,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			character3, characterDown, characterJumped, 
 			background, heliboy, heliboy2, heliboy3, heliboy4,
 			heliboy5;
-	private static Image tiledirt, tileocean;
+	public static Image tiledirt, tileocean;
 	private URL base;
 	private Graphics second;
 	private static Background bg1, bg2;
