@@ -1,6 +1,6 @@
 package kiloboltgame;
 
-import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 /*
@@ -24,25 +24,27 @@ public class Robot {
 	// Constants
 	final int JUMPSPEED = -15;
 	final int MOVESPEED = 5;
-	final int GROUND = 382;
 
 	/*
 	 * In Java, Class Variables should be private so that only its methods can
 	 * change them.
 	 */
 	private int centerX = 100; // x, y coordinates of robot character's center
-	private int centerY = GROUND;
+	private int centerY = 377;
 	private boolean jumped = false; // true if character is in the air and false
 									// is on the ground
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
 	private boolean ducked = false;
+	private boolean readyToFire = true;
 
 	private static Background bg1 = StartingClass.getBg1();
 	private static Background bg2 = StartingClass.getBg2();
 
 	private int speedX = 0; // the rate at which these x and y positions change
-	private int speedY = 1;
+	private int speedY = 0;
+	public static Rectangle rect = new Rectangle(0,0,0,0);
+	public static Rectangle rect2 = new Rectangle(0,0,0,0);
 	
 	private ArrayList<Projectile>projectiles = new ArrayList<Projectile>();
 	
@@ -89,9 +91,6 @@ public class Robot {
 		 * stop him from moving.
 		 */
 		centerY += speedY;
-		if (centerY + speedY >= GROUND) {
-			centerY = GROUND;
-		}
 
 		// Handles Jumping
 		/*
@@ -101,12 +100,6 @@ public class Robot {
 		if (jumped == true) {
 			speedY += 1; // while robot is in air, add 1 to its speedY
 							// NOTE: this brings robot downwards
-			if (centerY + speedY >= GROUND) {
-				centerY = GROUND;
-				speedY = 0;
-				jumped = false;
-			}
-
 		}
 
 		// Prevents going beyond X coordinate of 0
@@ -119,6 +112,9 @@ public class Robot {
 										// makes go outside the screen
 			centerX = 61; // fixes the robot's centerX at 60 px
 		}
+		
+		rect.setRect(centerX - 34, centerY - 63, 68, 63);
+		rect2.setRect(rect.getX(), rect.getY() + 63, 68, 64);
 	}
 
 	public void moveRight() {
@@ -167,8 +163,10 @@ public class Robot {
 	}
 	
 	public void shoot(){
-		Projectile p = new Projectile(centerX + 50, centerY - 25);	//	50 and 25 are x,y coordinates of p
-		projectiles.add(p);
+		if(readyToFire){
+			Projectile p = new Projectile(centerX + 50, centerY - 25);	//	50 and 25 are x,y coordinates of p
+			projectiles.add(p);
+		}
 	}
 
 	public int getCenterX() {
@@ -237,5 +235,13 @@ public class Robot {
 
 	public ArrayList getProjectiles() {
 		return projectiles;
+	}
+
+	public boolean isReadyToFire() {
+		return readyToFire;
+	}
+
+	public void setReadyToFire(boolean readyToFire) {
+		this.readyToFire = readyToFire;
 	}
 }
