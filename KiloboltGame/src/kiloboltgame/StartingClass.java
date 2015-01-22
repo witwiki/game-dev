@@ -17,6 +17,13 @@ import java.util.ArrayList;
 import kiloboltgame.framework.Animation;
 
 public class StartingClass extends Applet implements Runnable, KeyListener {
+	
+	//	game states
+	enum GameState{
+		Running, Dead
+	}
+	
+	GameState state = GameState.Running;
 
 	private static Robot robot;
 	
@@ -187,39 +194,45 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void run() {
-		while (true) {
-			robot.update();
-			if (robot.isJumped()) {
-				currentSprite = characterJumped;
-			} else if (robot.isJumped() == false && robot.isDucked() == false) {
-				currentSprite = anim.getImage();
-			}
-			
-			//	Bullets
-			ArrayList projectiles = robot.getProjectiles();
-			for(int i = 0; i < projectiles.size(); i++){
-				Projectile p = (Projectile) projectiles.get(i);
-				if (p.isVisible() == true){
-					p.update();
-				} else {
-					projectiles.remove(i);
+		
+		if(state == GameState.Running){
+			while (true) {
+				robot.update();
+				if (robot.isJumped()) {
+					currentSprite = characterJumped;
+				} else if (robot.isJumped() == false && robot.isDucked() == false) {
+					currentSprite = anim.getImage();
 				}
-			}
-			
-			//	Update Objects
-			updateTiles();
-			hb.update();
-			hb2.update();
-			bg1.update();
-			bg2.update();
-			
-			animate();
-			repaint(); // this calls paint
-			
-			try {
-				Thread.sleep(17);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				
+				//	Bullets
+				ArrayList projectiles = robot.getProjectiles();
+				for(int i = 0; i < projectiles.size(); i++){
+					Projectile p = (Projectile) projectiles.get(i);
+					if (p.isVisible() == true){
+						p.update();
+					} else {
+						projectiles.remove(i);
+					}
+				}
+				
+				//	Update Objects
+				updateTiles();
+				hb.update();
+				hb2.update();
+				bg1.update();
+				bg2.update();
+				
+				animate();
+				repaint(); // this calls paint
+				
+				try {
+					Thread.sleep(17);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if(robot.getCenterY() > 500){
+					state = GameState.Dead;
+				}
 			}
 		}
 	}
@@ -241,45 +254,54 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void paint(Graphics g) {
-		// draw the background image
-		g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
-		g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
-		paintTiles(g);
 		
-		ArrayList projectiles = robot.getProjectiles();
-		for(int i = 0; i < projectiles.size(); i++){
-			Projectile p = (Projectile) projectiles.get(i);
-			g.setColor(Color.YELLOW);
-			g.fillRect(p.getX(), p.getY(), 10, 5);
+		if(state == GameState.Running){
+			
+			// draw the background image
+			g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
+			g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
+			paintTiles(g);
+			
+			ArrayList projectiles = robot.getProjectiles();
+			for(int i = 0; i < projectiles.size(); i++){
+				Projectile p = (Projectile) projectiles.get(i);
+				g.setColor(Color.YELLOW);
+				g.fillRect(p.getX(), p.getY(), 10, 5);
+			}
+			
+			// draw the character image
+			g.drawImage(character, robot.getCenterX() - 61,
+					robot.getCenterY() - 63, this);
+
+			//	rectangles for collision detection
+			//g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(), (int)robot.rect.getWidth(), (int)robot.rect.getHeight());
+			//g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(), (int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
+
+			//	draw the current state of the character's image
+			g.drawImage(currentSprite, robot.getCenterX() - 61,
+					robot.getCenterY() - 63, this);
+
+			//	draw the heliboy objects
+			/*	If we paint 48 pixels lower in both X and Y 
+			 * 	(by subtracting 48), then whatever numbers 
+			 * 	that we input in the constructor (e.g. 
+			 * 	hb = new Heliboy(340, 360);) will represent 
+			 * 	the centerX and centerY coordinates of the 
+			 * 	newly drawn images.
+			 * 	updated: retrieves the current frame's image for heliboy
+			 */
+			g.drawImage(hanim.getImage(), hb.getCenterX() - 48, hb.getCenterY() - 48, this);
+			g.drawImage(hanim.getImage(), hb2.getCenterX() - 48, hb2.getCenterY() - 48, this);
+			
+			g.setFont(font);
+			g.setColor(Color.WHITE);
+			g.drawString(Integer.toString(score), 740, 30);
+		} else if(state == GameState.Dead){
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, 800, 480);
+			g.setColor(Color.WHITE);
+			g.drawString("Dead", 360, 240);
 		}
-		
-		// draw the character image
-		g.drawImage(character, robot.getCenterX() - 61,
-				robot.getCenterY() - 63, this);
-
-		//	rectangles for collision detection
-		//g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(), (int)robot.rect.getWidth(), (int)robot.rect.getHeight());
-		//g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(), (int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
-
-		//	draw the current state of the character's image
-		g.drawImage(currentSprite, robot.getCenterX() - 61,
-				robot.getCenterY() - 63, this);
-
-		//	draw the heliboy objects
-		/*	If we paint 48 pixels lower in both X and Y 
-		 * 	(by subtracting 48), then whatever numbers 
-		 * 	that we input in the constructor (e.g. 
-		 * 	hb = new Heliboy(340, 360);) will represent 
-		 * 	the centerX and centerY coordinates of the 
-		 * 	newly drawn images.
-		 * 	updated: retrieves the current frame's image for heliboy
-		 */
-		g.drawImage(hanim.getImage(), hb.getCenterX() - 48, hb.getCenterY() - 48, this);
-		g.drawImage(hanim.getImage(), hb2.getCenterX() - 48, hb2.getCenterY() - 48, this);
-		
-		g.setFont(font);
-		g.setColor(Color.WHITE);
-		g.drawString(Integer.toString(score), 740, 30);
 	}
 	
 	private void updateTiles(){
