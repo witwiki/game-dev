@@ -43,12 +43,17 @@ public class Robot {
 
 	private int speedX = 0; // the rate at which these x and y positions change
 	private int speedY = 0;
-	public static Rectangle rect = new Rectangle(0,0,0,0);
-	public static Rectangle rect2 = new Rectangle(0,0,0,0);
+	
+	public static Rectangle rect = new Rectangle(0,0,0,0);	// upper body
+	public static Rectangle rect2 = new Rectangle(0,0,0,0); // lower body
+	public static Rectangle rect3 = new Rectangle(0,0,0,0);	// left hand
+	public static Rectangle rect4 = new Rectangle(0,0,0,0); // right hand
+	public static Rectangle yellowRed = new Rectangle(0,0,0,0);	//  yellowRed is the "region of 25" tiles that will be checked for collision
+	public static Rectangle footleft = new Rectangle(0,0,0,0);
+	public static Rectangle footright = new Rectangle(0,0,0,0);
 	
 	private ArrayList<Projectile>projectiles = new ArrayList<Projectile>();
 	
-
 	public void update() {
 
 		// Moves Character or Scrolls Background accordingly.
@@ -94,14 +99,18 @@ public class Robot {
 
 		// Handles Jumping
 		/*
-		 * The Handles jumping section will check the current speed and position
-		 * to test whether the character is in mid-jump or on the ground.
+		 * As we handle falling elsewhere, we can remove 
+		 * the first if statement. The if statement that 
+		 * I have created prevents small fluctuations in 
+		 * speedY from registering as jumps.
 		 */
-		if (jumped == true) {
-			speedY += 1; // while robot is in air, add 1 to its speedY
-							// NOTE: this brings robot downwards
+		speedY += 1;
+		
+		if(speedY > 3){
+			jumped = true;
 		}
-
+		
+		
 		// Prevents going beyond X coordinate of 0
 		/*
 		 * This section just checks if the character is moving beyond the left
@@ -115,6 +124,11 @@ public class Robot {
 		
 		rect.setRect(centerX - 34, centerY - 63, 68, 63);
 		rect2.setRect(rect.getX(), rect.getY() + 63, 68, 64);
+		rect3.setRect(rect.getX() - 26, rect.getY() + 32, 26, 20);
+		rect4.setRect(rect.getX() + 68, rect.getY() + 32, 26, 20);
+		yellowRed.setRect(centerX - 110, centerY - 110, 180, 180);
+		footleft.setRect(centerX - 50, centerY + 20, 50, 15);
+		footright.setRect(centerX, centerY + 20, 50, 15);
 	}
 
 	public void moveRight() {

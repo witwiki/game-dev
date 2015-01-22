@@ -253,8 +253,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 				robot.getCenterY() - 63, this);
 
 		//	rectangles for collision detection
-		g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(), (int)robot.rect.getWidth(), (int)robot.rect.getHeight());
-		g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(), (int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
+		//g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(), (int)robot.rect.getWidth(), (int)robot.rect.getHeight());
+		//g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(), (int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());
 
 		//	draw the current state of the character's image
 		g.drawImage(currentSprite, robot.getCenterX() - 61,
