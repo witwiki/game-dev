@@ -2,6 +2,7 @@ package kiloboltgame;
 
 import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -18,7 +19,11 @@ import kiloboltgame.framework.Animation;
 public class StartingClass extends Applet implements Runnable, KeyListener {
 
 	private static Robot robot;
-	private Heliboy hb, hb2;
+	
+	public static Heliboy hb, hb2;
+	public static int score = 0;
+	private Font font = new Font(null,Font.BOLD,30);
+	
 	private Image image, currentSprite, character, character2,
 			character3, characterDown, characterJumped, 
 			background, heliboy, heliboy2, heliboy3, heliboy4,
@@ -272,6 +277,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 		g.drawImage(hanim.getImage(), hb.getCenterX() - 48, hb.getCenterY() - 48, this);
 		g.drawImage(hanim.getImage(), hb2.getCenterX() - 48, hb2.getCenterY() - 48, this);
 		
+		g.setFont(font);
+		g.setColor(Color.WHITE);
+		g.drawString(Integer.toString(score), 740, 30);
 	}
 	
 	private void updateTiles(){
